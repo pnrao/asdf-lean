@@ -31,19 +31,24 @@ download_lean() {
     fail "asdf-lean supports release installs only"
   fi
 
+  # Resolve "latest" to a concrete version
+  if [ "$version" = "latest" ]; then
+    version=$("$(dirname "$0")/latest-stable")
+  fi
+
   local platform
   local arch_suffix
 
   case "$OSTYPE" in
     darwin*) platform="darwin" ;;
-    linux*)  platform="linux" ;;
-    *)       fail "Unsupported platform: $OSTYPE" ;;
+    linux*) platform="linux" ;;
+    *) fail "Unsupported platform: $OSTYPE" ;;
   esac
 
   case "$(uname -m)" in
-    x86_64)           arch_suffix="" ;;
-    arm64 | aarch64)  arch_suffix="_aarch64" ;;
-    *)                fail "Unsupported architecture: $(uname -m)" ;;
+    x86_64) arch_suffix="" ;;
+    arm64 | aarch64) arch_suffix="_aarch64" ;;
+    *) fail "Unsupported architecture: $(uname -m)" ;;
   esac
 
   local filename="lean-${version}-${platform}${arch_suffix}.tar.zst"
