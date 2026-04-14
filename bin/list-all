@@ -32,7 +32,7 @@ all_versions=""
 page=1
 while true; do
   response=$(eval "$cmd 'https://api.github.com/repos/leanprover/lean4/releases?per_page=100&page=${page}'" |
-    grep 'tag_name' | sed 's/.* "v//;s/",//')
+    grep 'tag_name' | sed 's/.* "v//;s/",//' || true)
   [ -z "$response" ] && break
   all_versions="${all_versions}"$'\n'"${response}"
   ((page++))
