@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+filter="${1:-}"
+"$(dirname "$0")/list-all" | tr ' ' '\n' | grep -v '\-' | grep "^${filter}" | tail -1
