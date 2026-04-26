@@ -27,9 +27,8 @@ check_dependencies() {
   command -v tar >/dev/null 2>&1 || fail "tar is required"
   command -v zstd >/dev/null 2>&1 || fail "zstd is required"
 
-  # Check if tar supports zstd (modern GNU tar or BSD tar)
-  # Some older versions might need --zstd explicitly or might not support it at all
-  if ! tar --help | grep -q zstd; then
+  # BSD tar (macOS) might not support zstd natively via -x, but we can pipe
+  if ! tar --help | grep -q zstd && [[ "$(get_platform)" == "linux" ]]; then
     fail "installed tar does not seem to support zstd archives"
   fi
 }

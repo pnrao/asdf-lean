@@ -51,7 +51,7 @@ download_lean() {
   curl --fail --silent --location --output "$archive_path" "$download_url" || fail "Could not download $download_url"
 
   echo "∗ Extracting..."
-  tar --strip-components=1 -xf "$archive_path" -C "$download_path" || fail "Could not extract $archive_path"
+  zstd -d <"$archive_path" | tar --strip-components=1 -xf - -C "$download_path" || fail "Could not extract $archive_path"
   rm -f "$archive_path"
 }
 
