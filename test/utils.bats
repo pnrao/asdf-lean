@@ -3,7 +3,7 @@
 setup() {
   REPO_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
   LIB_DIR="$REPO_DIR/lib"
-  
+
   # Mock fail function to just exit so bats can capture it
   fail() {
     exit 1

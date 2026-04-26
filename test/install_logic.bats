@@ -3,16 +3,16 @@
 setup() {
   REPO_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." && pwd)"
   BIN_DIR="$REPO_DIR/bin"
-  
+
   TEST_TEMP_DIR="$(mktemp -d)"
   DOWNLOAD_PATH="$TEST_TEMP_DIR/download"
   INSTALL_PATH="$TEST_TEMP_DIR/install"
-  
+
   mkdir -p "$DOWNLOAD_PATH"
   mkdir -p "$INSTALL_PATH"
-  
+
   # Create a dummy file in download path
-  echo "dummy lean binary" > "$DOWNLOAD_PATH/lean"
+  echo "dummy lean binary" >"$DOWNLOAD_PATH/lean"
 }
 
 teardown() {
@@ -24,7 +24,7 @@ teardown() {
   export ASDF_INSTALL_VERSION="4.0.0"
   export ASDF_INSTALL_PATH="$INSTALL_PATH"
   export ASDF_DOWNLOAD_PATH="$DOWNLOAD_PATH"
-  
+
   run "$BIN_DIR/install"
   [ "$status" -eq 0 ]
   [ -f "$INSTALL_PATH/lean" ]
@@ -36,7 +36,7 @@ teardown() {
   export ASDF_INSTALL_VERSION="master"
   export ASDF_INSTALL_PATH="$INSTALL_PATH"
   export ASDF_DOWNLOAD_PATH="$DOWNLOAD_PATH"
-  
+
   run "$BIN_DIR/install"
   [ "$status" -eq 1 ]
   [[ "$output" =~ "supports release installs only" ]]

@@ -19,6 +19,19 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y zstd
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install zstd
+
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v4
         with:
@@ -37,7 +50,7 @@ jobs:
           sudo apt-get install -y bats zstd
 
       - name: Install asdf
-        uses: asdf-vm/actions/setup-asdf@v2
+        uses: asdf-vm/actions/setup@v2
 
       - name: Test plugin
         run: |
