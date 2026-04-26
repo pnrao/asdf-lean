@@ -17,15 +17,15 @@
 
 set -eo pipefail
 
-fail() {
-  echo -e "\e[31mFail:\e[m $* 😭"
-  exit 1
-}
+# shellcheck source=lib/utils.sh
+source "$(dirname "$0")/../lib/utils.sh"
 
 download_lean() {
   local install_type=$1
   local version=$2
   local download_path=$3
+
+  check_dependencies
 
   if [ "$install_type" != "version" ]; then
     fail "asdf-lean supports release installs only"
@@ -39,17 +39,8 @@ download_lean() {
   local platform
   local arch_suffix
 
-  case "$OSTYPE" in
-    darwin*) platform="darwin" ;;
-    linux*) platform="linux" ;;
-    *) fail "Unsupported platform: $OSTYPE" ;;
-  esac
-
-  case "$(uname -m)" in
-    x86_64) arch_suffix="" ;;
-    arm64 | aarch64) arch_suffix="_aarch64" ;;
-    *) fail "Unsupported architecture: $(uname -m)" ;;
-  esac
+  platform=$(get_platform)
+  arch_suffix=$(get_arch_suffix)
 
   local filename="lean-${version}-${platform}${arch_suffix}.tar.zst"
   local download_url="https://github.com/leanprover/lean4/releases/download/v${version}/${filename}"

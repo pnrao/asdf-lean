@@ -17,10 +17,8 @@
 
 set -eo pipefail
 
-fail() {
-  echo -e "\e[31mFail:\e[m $* 😭"
-  exit 1
-}
+# shellcheck source=lib/utils.sh
+source "$(dirname "$0")/../lib/utils.sh"
 
 install_lean() {
   local install_type=$1

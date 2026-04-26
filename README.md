@@ -28,6 +28,10 @@ asdf plugin-add lean https://github.com/pnrao/asdf-lean.git
 Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to
 install & manage versions.
 
+## Origin
+
+This project is a modern fork of [asdf-community/asdf-lean](https://github.com/asdf-community/asdf-lean). The original version primarily supported Lean 3 and macOS, and had not processed new pull requests since May 2021. This version focuses on Lean 4 with multi-platform support.
+
 ## License
 
 Licensed under the

@@ -17,25 +17,17 @@
 
 set -eo pipefail
 
-cmd="curl --silent --location"
-
-if [ -n "$GITHUB_API_TOKEN" ]; then
-  cmd="$cmd --header 'Authorization: token $GITHUB_API_TOKEN'"
-fi
+# shellcheck source=lib/utils.sh
+source "$(dirname "$0")/../lib/utils.sh"
 
 sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
-all_versions=""
-page=1
-while true; do
-  response=$(eval "$cmd 'https://api.github.com/repos/leanprover/lean4/releases?per_page=100&page=${page}'" |
-    grep 'tag_name' | sed 's/.* "v//;s/",//' || true)
-  [ -z "$response" ] && break
-  all_versions="${all_versions}"$'\n'"${response}"
-  ((page++))
-done
+list_all_versions() {
+  git ls-remote --tags --refs https://github.com/leanprover/lean4.git |
+    grep -o 'refs/tags/v.*' | cut -d/ -f3 | sed 's/^v//'
+}
 
-echo "$all_versions" | grep -v '^$' | sort_versions | xargs
+list_all_versions | sort_versions | xargs
