@@ -4,11 +4,9 @@ on:
   push:
     paths-ignore:
       - '**.md'
-      - '.all-contributorsrc'
   pull_request:
     paths-ignore:
       - '**.md'
-      - '.all-contributorsrc'
   schedule:
     - cron: "0 0 * * 5"
 
@@ -25,8 +23,6 @@ jobs:
         uses: asdf-vm/actions/plugin-test@v4
         with:
           command: lean --version
-        env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
@@ -41,22 +37,12 @@ jobs:
           sudo apt-get install -y bats zstd
 
       - name: Install asdf
-        run: |
-          ASDF_VERSION=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest \
-            | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-          curl -fsSL -o /tmp/asdf.tar.gz \
-            "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-amd64.tar.gz"
-          mkdir -p "$HOME/.asdf/bin"
-          tar -C "$HOME/.asdf/bin" -xzf /tmp/asdf.tar.gz
-          echo "$HOME/.asdf/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
+        uses: asdf-vm/actions/setup-asdf@v2
 
       - name: Test plugin
         run: |
           asdf plugin add lean "$GITHUB_WORKSPACE"
           bats test
-        env:
-          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
@@ -66,7 +52,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run ShellCheck
-        run: shellcheck bin/*
+        run: shellcheck bin/* lib/*
 
   format:
     runs-on: ubuntu-latest
