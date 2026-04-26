@@ -52,15 +52,7 @@ jobs:
           sudo apt-get install -y bats zstd
 
       - name: Install asdf
-        run: |
-          ASDF_VERSION=$(curl -s https://api.github.com/repos/asdf-vm/asdf/releases/latest \
-            | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-          curl -fsSL -o /tmp/asdf.tar.gz \
-            "https://github.com/asdf-vm/asdf/releases/download/v${ASDF_VERSION}/asdf-v${ASDF_VERSION}-linux-amd64.tar.gz"
-          mkdir -p "$HOME/.asdf/bin"
-          tar -C "$HOME/.asdf/bin" -xzf /tmp/asdf.tar.gz
-          echo "$HOME/.asdf/bin" >> "$GITHUB_PATH"
-          echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
+        uses: asdf-vm/actions/setup@v3
 
       - name: Test plugin
         run: |
